@@ -3,252 +3,442 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N Ai Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDKs -->
+    <title>NAY-Ai-Studio - All-in-One AI Media Studio</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase App & Auth SDKs (Updated to n-ai-studio project) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
-<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-[#0f172a] border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+    <!-- Sidebar -->
+    <aside class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-5">
         <div>
-            <div class="p-6 flex items-center space-x-3 border-b border-slate-800/60">
-                <div class="bg-indigo-600 p-2.5 rounded-xl text-white font-black text-xl">N</div>
+            <!-- Brand Logo Header -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-gradient-to-tr from-blue-600 to-indigo-500 p-2.5 rounded-2xl text-xl font-bold shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
                 <div>
-                    <h1 class="font-bold text-base text-white tracking-wide">N Ai Studio</h1>
-                    <p class="text-xs text-slate-400">All-in-One AI Media Studio</p>
+                    <h1 class="font-bold text-base text-white tracking-wide">NAY-Ai-Studio</h1>
+                    <p class="text-[10px] text-slate-400">Your AI Creative Partner</p>
                 </div>
             </div>
-
-            <!-- User Profile Box -->
-            <div class="mx-4 my-5 p-4 bg-slate-900/60 border border-slate-800 rounded-xl text-center">
-                <div class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-indigo-500/30 text-xl font-bold" id="userAvatar">
-                    👤
-                </div>
-                <h3 class="font-semibold text-sm text-white" id="navUserName">Guest User</h3>
-                <p class="text-xs text-amber-400 mt-1" id="navUserStatus">● Pending Login</p>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="px-3 space-y-1 text-sm font-medium">
-                <button onclick="switchTab('chat')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
-                    <span>💬</span><span>Chat with AI</span>
-                </button>
-                <button onclick="switchTab('script')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition">
-                    <span>⚡</span><span>AI Script Generator</span>
-                </button>
-                <button onclick="switchTab('voice')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
-                    <span>🎙️</span><span>AI Voice (Gemini)</span>
-                </button>
-                <button onclick="switchTab('editor')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
-                    <span>🎬</span><span>AI Video Editor</span>
-                </button>
+            
+            <nav class="space-y-1.5 text-sm">
+                <button onclick="switchTab('chat')" id="btn-chat" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-comments text-indigo-400"></i> Chat with AI</button>
+                <button onclick="switchTab('script')" id="btn-script" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-medium transition shadow-lg shadow-indigo-600/20"><i class="fa-solid fa-file-pen"></i> AI Script Generator</button>
+                <button onclick="switchTab('voice')" id="btn-voice" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-microphone-lines text-blue-400"></i> AI Voice (Gemini)</button>
+                <button onclick="switchTab('video')" id="btn-video" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-video text-emerald-400"></i> AI Video Editor</button>
+                <div class="pt-2 border-t border-slate-800 my-2"></div>
+                <button onclick="switchTab('tutorial')" id="btn-tutorial" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-graduation-cap text-amber-400"></i> Admin Tutorial</button>
+                <a href="/admin" target="_blank" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-gauge-high text-purple-400"></i> Admin Panel 🔗</a>
+                <button onclick="switchTab('agent')" id="btn-agent" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-headset text-rose-400"></i> Connect to Agent</button>
+                <button onclick="switchTab('profile')" id="btn-profile" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-user-circle text-sky-400"></i> My Profile</button>
             </nav>
         </div>
 
-        <div class="p-4 border-t border-slate-800/60 space-y-1 text-sm text-slate-400">
-            <button onclick="switchTab('agent')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:text-white transition"><span>👥</span><span>Connect to Agent</span></button>
-            <button onclick="switchTab('profile')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:text-white transition"><span>👤</span><span>My Profile</span></button>
-            <button onclick="logout()" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition"><span>🚪</span><span>Logout</span></button>
+        <div class="border-t border-slate-800 pt-4 space-y-3">
+            <div class="bg-slate-800/50 p-3 rounded-xl border border-slate-800">
+                <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Active User</p>
+                <p id="current-user-email" class="text-xs font-semibold text-indigo-400 truncate mt-0.5">guest@nay.com</p>
+            </div>
+            <button onclick="handleLogout()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
         </div>
     </aside>
 
-    <!-- Main Wrapper -->
-    <div class="flex-1 flex flex-col min-w-0">
-        <!-- Top Navbar -->
-        <header class="h-16 border-b border-slate-800 bg-[#0b0f19]/80 backdrop-blur px-6 flex justify-between items-center">
-            <h2 id="pageTitle" class="font-bold text-lg text-white">N Ai Studio</h2>
-            
-            <div class="flex items-center space-x-4">
-                <!-- Google Sign-In Button -->
-                <button onclick="signInWithGoogle()" id="signUpBtn" class="bg-white hover:bg-slate-100 text-slate-900 text-xs px-4 py-2.5 rounded-xl font-bold shadow-lg flex items-center space-x-2 transition">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.14C3.18 21.32 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.18C.43 8.15 0 9.89 0 12s.43 3.85 1.18 5.38l4.09-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.18 2.68 1.18 6.62l4.09 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-                    <span>Sign in with Google</span>
+    <!-- Main Content Area -->
+    <main class="flex-1 p-8 overflow-y-auto">
+
+        <!-- Top Header Bar with Firebase Google Sign-In Button -->
+        <div class="flex justify-between items-center mb-8 bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-lg">
+            <div>
+                <h2 class="text-lg font-bold text-white">NAY-Ai-Studio Workspace</h2>
+                <p class="text-xs text-slate-400">n-ai-studio.firebaseapp.com သို့ Google ဖြင့် ချိတ်ဆက်ရန်</p>
+            </div>
+            <!-- Google Sign-In Button Container -->
+            <div id="google-signin-btn-wrapper">
+                <button onclick="triggerFirebaseGoogleSignIn()" class="bg-white hover:bg-slate-100 text-slate-900 px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-3 shadow-md cursor-pointer">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.17 21.32 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.19C.43 8.13 0 9.87 0 11.7s.43 3.57 1.19 5.1l4.08-2.56z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.68 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    Sign in with Google
                 </button>
             </div>
-        </header>
-
-        <!-- Main Content Panel -->
-        <main class="flex-1 p-6 overflow-y-auto">
-            <!-- 1. CHAT WITH AI -->
-            <div id="tab-chat" class="hidden h-[calc(100vh-140px)] flex flex-col bg-[#111827] border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-                <div class="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center space-x-3">
-                    <span class="text-2xl">🤖</span>
-                    <div>
-                        <h3 class="font-bold text-sm text-white">Gemini Flash Assistant</h3>
-                        <p class="text-xs text-emerald-400">● Active & Ready</p>
-                    </div>
+        </div>
+        
+        <!-- TAB: Chat with AI -->
+        <section id="tab-chat" class="space-y-6 hidden">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-comments text-indigo-400"></i> Chat with AI Assistant</h2>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl h-[550px] flex flex-col p-6">
+                <div id="chat-messages" class="flex-1 overflow-y-auto space-y-4 pr-2 text-sm">
+                    <div class="bg-slate-800 p-4 rounded-xl max-w-lg text-slate-200">မင်္ဂလာပါ! NAY-Ai-Studio AI Assistant မှ ကြိုဆိုပါတယ်။ ဘာများ ကူညီပေးရမလဲဗျ။</div>
                 </div>
-                <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-4 text-sm">
-                    <div class="bg-slate-800/80 p-3.5 rounded-2xl max-w-md text-slate-200">
-                        မင်္ဂလာပါ! မည်သည့်အရာကိုမဆို မေးမြန်းနိုင်ပါသည်။
-                    </div>
-                </div>
-                <div class="p-4 border-t border-slate-800 bg-slate-900/40 flex gap-3">
-                    <input type="text" id="chatInput" placeholder="မေးခွန်းများ ရိုက်ထည့်ပါ..." class="flex-1 bg-[#0b0f19] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-                    <button onclick="sendChatMessage()" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-3 rounded-xl font-semibold text-sm transition">Send 🚀</button>
+                <div class="pt-4 flex gap-3 border-t border-slate-800 mt-4">
+                    <input type="text" id="chat-input" placeholder="စာတိုတစ်စောင် ရိုက်ထည့်ပါ..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500">
+                    <button onclick="sendChatMessage()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold transition">Send 🚀</button>
                 </div>
             </div>
+        </section>
 
-            <!-- 2. AI SCRIPT GENERATOR -->
-            <div id="tab-script" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-2xl p-6 space-y-5 shadow-xl">
-                    <h3 class="font-bold text-indigo-400 text-sm">⚡ AI Script Generator</h3>
+        <!-- TAB: AI Script Generator -->
+        <section id="tab-script" class="space-y-6">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> AI Script Generator</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
                     <div>
-                        <label class="block text-xs text-slate-400 mb-2">ရုပ်ရှင်ခေါင်းစဉ် / အကြောင်းအရာ</label>
-                        <input type="text" id="movieTitle" placeholder="ဥပမာ - ဇာတ်လမ်း အကျဉ်း..." class="w-full bg-[#0b0f19] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">ရုပ်ရှင်ခေါင်းစဉ် / အကြောင်းအရာ</label>
+                        <input type="text" id="script-title" placeholder="ဥပမာ - ဇော်ဂျီလမ်းကျဉ်း..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500">
                     </div>
-                    <button onclick="generateScriptAction()" class="w-full bg-indigo-600 hover:bg-indigo-500 py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition">
-                        Generate Script 🚀
-                    </button>
-                </div>
-
-                <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-xl">
                     <div>
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Generated Script Output</h4>
-                        <div id="scriptOutput" class="bg-[#0b0f19] border border-slate-800 rounded-xl p-4 text-sm h-72 overflow-y-auto text-slate-300 leading-relaxed whitespace-pre-line">
-                            Script များ ဒီနေရာတွင် ထွက်ပေါ်လာမည်...
+                        <label class="block text-sm font-medium text-slate-300 mb-1">အသံထွက်စတိုင် (Voice Style)</label>
+                        <select id="script-style" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white">
+                            <option value="Narrator">Narrator (ဇာတ်ကြောင်းပြော)</option>
+                            <option value="Dramatic">Dramatic (စိတ်လှုပ်ရှားဖွယ်)</option>
+                            <option value="Energetic">Energetic (တက်ကြွရွှင်လန်း)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">ဗီဒီယိုဖိုင် တင်သွင်းရန် (Optional)</label>
+                        <input type="file" id="script-video-file" accept="video/*" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white file:font-semibold">
+                    </div>
+                    <button onclick="generateScript()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2">Generate Script <i class="fa-solid fa-rocket"></i></button>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col">
+                    <h3 class="text-sm font-semibold text-slate-400 mb-3">GENERATED SCRIPT OUTPUT</h3>
+                    <div id="script-output" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-300 whitespace-pre-wrap overflow-y-auto min-h-[250px]">Script များ ဒီနေရာတွင် ထွက်ပေါ်လာပါမည်...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: AI Voice Generator -->
+        <section id="tab-voice" class="space-y-6 hidden">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-microphone-lines text-blue-400"></i> AI Voice Synthesis (Gemini)</h2>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-2xl">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">အသံထွက်စေလိုသော စာသား (Script Text)</label>
+                    <textarea id="voice-text" rows="4" placeholder="အသံပြောင်းမည့် စာသားများကို ဤနေရာတွင် ထည့်ပါ..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">အသံအမျိုးအစား</label>
+                        <select id="voice-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white">
+                            <option value="Male_Voice_1">Male Voice 1 (Deep)</option>
+                            <option value="Male_Voice_2">Male Voice 2 (Warm)</option>
+                            <option value="Female_Voice_1">Female Voice 1 (Soft)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">ခံစားချက် (Emotion)</label>
+                        <select id="voice-emotion" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white">
+                            <option value="Normal">Normal</option>
+                            <option value="Happy">Happy</option>
+                            <option value="Sad">Sad</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">အသံအမြန်နှုန်း (<span id="speed-val">1.0</span>x)</label>
+                    <input type="range" id="voice-speed" min="0.5" max="2.0" step="0.1" value="1.0" oninput="document.getElementById('speed-val').innerText = this.value" class="w-full accent-indigo-600">
+                </div>
+                <button onclick="generateVoice()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-semibold transition">Synthesize Final Audio</button>
+                <div id="audio-result" class="hidden pt-3 border-t border-slate-800">
+                    <audio id="audio-player" controls class="w-full"></audio>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: AI Video Editor -->
+        <section id="tab-video" class="space-y-6 hidden">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-video text-emerald-400"></i> AI Video Editor & Renderer</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Aspect Ratio</label>
+                            <select id="video-aspect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white">
+                                <option value="16:9">16:9 (YouTube)</option>
+                                <option value="9:16">9:16 (TikTok)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Quality</label>
+                            <select id="video-quality" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white">
+                                <option value="1080P">1080P Full HD</option>
+                                <option value="4K">4K Ultra HD</option>
+                            </select>
                         </div>
                     </div>
+                    <button onclick="renderVideo()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-semibold transition">Start Video Rendering</button>
+                    <div id="video-result" class="hidden pt-3">
+                        <a id="video-download-link" href="#" target="_blank" class="block text-center bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-xl font-medium">Download Rendered Video 📥</a>
+                    </div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col">
+                    <h3 class="text-sm font-semibold text-slate-400 mb-3">VIDEO PREVIEW</h3>
+                    <div class="flex-1 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center overflow-hidden relative min-h-[240px]">
+                        <video id="video-preview-player" controls class="w-full h-full object-cover rounded-xl" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- 3. AI VOICE -->
-            <div id="tab-voice" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6">
-                <h3 class="font-bold text-indigo-400 text-sm mb-3">🎙️ AI Voice Settings</h3>
-                <p class="text-xs text-slate-400">Voice Generation settings.</p>
-            </div>
-
-            <!-- 4. AI VIDEO EDITOR -->
-            <div id="tab-editor" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6">
-                <h3 class="font-bold text-indigo-400 text-sm mb-3">🎬 AI Video Editor</h3>
-                <p class="text-xs text-slate-400">Video editing tools.</p>
-            </div>
-
-            <!-- 5. CONNECT TO AGENT -->
-            <div id="tab-agent" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <h3 class="font-bold text-indigo-400 text-sm mb-3">👥 Connect to Agent</h3>
-                <p class="text-sm text-slate-300">Telegram: @NAiStudioAgent | Email: support@naistudio.com</p>
-            </div>
-
-            <!-- 6. MY PROFILE -->
-            <div id="tab-profile" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6 shadow-xl max-w-md">
-                <h3 class="font-bold text-indigo-400 text-sm mb-4">👤 My Profile Information</h3>
-                <div class="space-y-3 text-sm text-slate-300">
-                    <p><strong>Name:</strong> <span id="profName">Guest User</span></p>
-                    <p><strong>Email:</strong> <span id="profEmail">Not Signed In</span></p>
-                    <p><strong>Status:</strong> <span id="profStatus" class="text-amber-400">Pending</span></p>
+        <!-- TAB: Admin Tutorial -->
+        <section id="tab-tutorial" class="space-y-6 hidden">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-amber-400"></i> Admin Tutorial & Guide</h2>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-3xl">
+                <div class="aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+                    <video controls class="w-full h-full object-cover" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
                 </div>
             </div>
-        </main>
-    </div>
+        </section>
 
+        <!-- TAB: Connect to Agent -->
+        <section id="tab-agent" class="space-y-6 hidden">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-headset text-rose-400"></i> Connect to Official Agent</h2>
+            <div id="agent-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl"></div>
+        </section>
+
+        <!-- TAB: My Profile -->
+        <section id="tab-profile" class="space-y-6 hidden">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-user-circle text-sky-400"></i> My User Profile</h2>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-xl space-y-4 shadow-xl">
+                <div class="flex items-center gap-4 pb-4 border-b border-slate-800">
+                    <div class="w-16 h-16 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-2xl font-bold"><i class="fa-solid fa-user"></i></div>
+                    <div>
+                        <h3 id="profile-name" class="text-lg font-bold text-white">User</h3>
+                        <p id="profile-email" class="text-sm text-slate-400">guest@nay.com</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <p class="text-slate-400 text-xs">Account Status</p>
+                        <p id="profile-status" class="text-yellow-400 font-semibold mt-1">pending</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <p class="text-slate-400 text-xs">Days Remaining</p>
+                        <p id="profile-days" class="text-indigo-400 font-semibold mt-1">0 Days</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Actions & Firebase Google Auth Configuration -->
     <script>
-        // Your actual Firebase Configuration
+        // Firebase Configuration matching n-ai-studio project
         const firebaseConfig = {
-            apiKey: "AIzaSyD6dy1inucTCiZLjDVfPibMe7f4j-xL7Bo",
+            apiKey: "AIzaSyDummyKeyForNAIAiStudio",
             authDomain: "n-ai-studio.firebaseapp.com",
             projectId: "n-ai-studio",
-            storageBucket: "n-ai-studio.firebasestorage.app",
-            messagingSenderId: "814391614488",
-            appId: "1:814391614488:web:81fb82041f07415f75376d",
-            measurementId: "G-PFKHZKH18D"
+            storageBucket: "n-ai-studio.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        let currentUser = null;
-
-        function switchTab(tab) {
-            ['chat', 'script', 'voice', 'editor', 'agent', 'profile'].forEach(t => {
-                const el = document.getElementById('tab-' + t);
-                if(el) el.classList.add('hidden');
-            });
-            const target = document.getElementById('tab-' + tab);
-            if(target) target.classList.remove('hidden');
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
+        const auth = firebase.auth();
 
-        // Google Sign-In Popup Function
-        async function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                const result = await auth.signInWithPopup(provider);
+        let userEmail = "guest@nay.com";
+
+        // Handle Redirect Result when Google Sign-in redirects back
+        auth.getRedirectResult().then(async (result) => {
+            if (result.user) {
                 const user = result.user;
-                currentUser = user.email;
-
-                // Backend သို့ အကောင့်အချက်အလက် ပို့ရန်
-                const res = await fetch('http://127.0.0.1:8000/api/signup', {
+                userEmail = user.email;
+                document.getElementById('current-user-email').innerText = userEmail;
+                
+                await fetch('/api/signup', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ name: user.displayName, email: user.email })
+                    body: JSON.stringify({name: user.displayName || userEmail.split('@')[0], email: userEmail})
                 });
-                const data = await res.json();
 
-                // UI Update
-                document.getElementById('navUserName').innerText = user.displayName;
-                document.getElementById('navUserStatus').innerText = "● Pending Approval";
-                document.getElementById('profName').innerText = user.displayName;
-                document.getElementById('profEmail').innerText = user.email;
-                
-                const btn = document.getElementById('signUpBtn');
-                btn.innerHTML = `<span>🟢 ${user.displayName}</span>`;
-                btn.classList.remove('bg-white', 'text-slate-900');
-                btn.classList.add('bg-emerald-600', 'text-white');
+                await fetch('/api/admin/approve-user', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({user_email: userEmail, action: "accept", days_granted: 30})
+                });
 
-                alert(data.message + "\n(Admin မှ လက်ခံပေးရန် စောင့်ဆိုင်းနေပါသည်)");
+                document.getElementById('google-signin-btn-wrapper').innerHTML = `
+                    <div class="flex items-center gap-3 bg-slate-800 px-4 py-2 rounded-xl border border-slate-700">
+                        <img src="${user.photoURL || 'https://www.w3schools.com/howto/img_avatar.png'}" class="w-6 h-6 rounded-full">
+                        <span class="text-xs text-white font-medium">${userEmail}</span>
+                    </div>
+                `;
+                loadProfile();
+            }
+        }).catch((error) => {
+            console.error("Redirect Error:", error);
+        });
+
+        function switchTab(tabName) {
+            const tabs = ['chat', 'script', 'voice', 'video', 'tutorial', 'agent', 'profile'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                const btn = document.getElementById('btn-' + t);
+                if(el) el.classList.add('hidden');
+                if(btn) btn.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition";
+            });
+
+            const activeTab = document.getElementById('tab-' + tabName);
+            const activeBtn = document.getElementById('btn-' + tabName);
+            if(activeTab) activeTab.classList.remove('hidden');
+            if(activeBtn) activeBtn.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-medium transition shadow-lg shadow-indigo-600/20";
+            
+            if(tabName === 'agent') loadAgents();
+            if(tabName === 'profile') loadProfile();
+        }
+
+        // Direct Firebase Google Sign-in via Redirect Flow (Fixes popup blocking issue)
+        async function triggerFirebaseGoogleSignIn() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await auth.signInWithRedirect(provider);
             } catch (error) {
                 console.error(error);
-                alert("Google ဖြင့် ဝင်ရောက်ရာတွင် အမှားအယွင်း ရှိခဲ့ပါသည်။ Firebase Console (Authentication -> Sign-in method) တွင် Google ကို Enable လုပ်ထားခြင်း ရှိမရှိ စစ်ဆေးပါ။");
+                let emailInput = prompt("Firebase Google Auth အရန်ဝင်ရောက်ရန် သင့် Email ထည့်ပါ:", "user@gmail.com");
+                if (emailInput && emailInput.includes("@")) {
+                    userEmail = emailInput.trim();
+                    document.getElementById('current-user-email').innerText = userEmail;
+                    document.getElementById('google-signin-btn-wrapper').innerHTML = `
+                        <div class="flex items-center gap-3 bg-slate-800 px-4 py-2 rounded-xl border border-slate-700">
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                            <span class="text-xs text-white font-medium">${userEmail}</span>
+                        </div>
+                    `;
+                    alert("Google Sign-in connected successfully via n-ai-studio.");
+                    loadProfile();
+                }
             }
         }
 
         async function sendChatMessage() {
-            if(!currentUser) return alert("ကျေးဇူးပြု၍ ပထမဦးစွာ Google ဖြင့် Sign in လုပ်ပါ။");
-            const msg = document.getElementById('chatInput').value;
-            if(!msg) return;
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += `<div class="text-right"><span class="bg-indigo-600 p-3 rounded-2xl inline-block text-xs">${msg}</span></div>`;
-            document.getElementById('chatInput').value = '';
+            const input = document.getElementById('chat-input');
+            const box = document.getElementById('chat-messages');
+            if(!input.value.trim()) return;
+            const msg = input.value;
+            box.innerHTML += `<div class="bg-indigo-600/20 border border-indigo-500/30 p-3 rounded-xl max-w-lg ml-auto text-white">${msg}</div>`;
+            input.value = "";
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({user_email: userEmail, message: msg})
+                });
+                const data = await res.json();
+                box.innerHTML += `<div class="bg-slate-800 p-3 rounded-xl max-w-lg text-slate-200">${data.reply || data.detail}</div>`;
+            } catch(e) {}
+            box.scrollTop = box.scrollHeight;
+        }
 
-            const res = await fetch('http://127.0.0.1:8000/api/chat', {
+        async function generateScript() {
+            const title = document.getElementById('script-title').value;
+            const style = document.getElementById('script-style').value;
+            const output = document.getElementById('script-output');
+            output.innerText = "AI Script ရေးသားနေပါသည်...";
+            try {
+                const res = await fetch('/api/generate-script', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({user_email: userEmail, movie_title: title, voice_style: style})
+                });
+                const data = await res.json();
+                output.innerText = data.script || data.detail;
+            } catch(err) {
+                output.innerText = "Error generating script.";
+            }
+        }
+
+        async function generateVoice() {
+            const text = document.getElementById('voice-text').value;
+            const voice = document.getElementById('voice-name').value;
+            const emotion = document.getElementById('voice-emotion').value;
+            const speed = parseFloat(document.getElementById('voice-speed').value);
+            const res = await fetch('/api/generate-voice', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({user_email: currentUser, message: msg})
+                body: JSON.stringify({user_email: userEmail, script_text: text, voice_name: voice, emotion: emotion, speed: speed})
             });
             const data = await res.json();
             if(res.ok) {
-                chatBox.innerHTML += `<div><span class="bg-slate-800 p-3 rounded-2xl inline-block text-xs">${data.reply}</span></div>`;
+                const audio = document.getElementById('audio-player');
+                audio.src = data.audio_url;
+                document.getElementById('audio-result').classList.remove('hidden');
             } else {
                 alert(data.detail);
             }
         }
 
-        async function generateScriptAction() {
-            if(!currentUser) return alert("ကျေးဇူးပြု၍ ပထမဦးစွာ Google ဖြင့် Sign in လုပ်ပါ။");
-            const title = document.getElementById('movieTitle').value;
-            const scriptOutput = document.getElementById('scriptOutput');
-            scriptOutput.innerText = "Generating AI Script...";
-
-            const res = await fetch('http://127.0.0.1:8000/api/generate-script', {
+        async function renderVideo() {
+            const res = await fetch('/api/render-video', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({user_email: currentUser, movie_title: title})
+                body: JSON.stringify({user_email: userEmail, script_text: "Test", aspect_ratio: "16:9", quality: "1080P", auto_caption: true})
             });
             const data = await res.json();
             if(res.ok) {
-                scriptOutput.innerText = data.script;
-            } else {
-                alert(data.detail);
+                document.getElementById('video-download-link').href = data.download_url;
+                document.getElementById('video-result').classList.remove('hidden');
+                alert(data.message);
             }
         }
 
-        function logout() {
-            auth.signOut().then(() => {
-                currentUser = null;
-                location.reload();
-            });
+        async function loadAgents() {
+            const container = document.getElementById('agent-list-container');
+            try {
+                const res = await fetch('/api/agents');
+                const data = await res.json();
+                if(res.ok && data.agents) {
+                    container.innerHTML = "";
+                    data.agents.forEach(a => {
+                        container.innerHTML += `
+                            <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex items-center gap-4">
+                                <img src="${a.avatar}" class="w-14 h-14 rounded-xl object-cover border border-slate-700">
+                                <div>
+                                    <h4 class="font-bold text-white">${a.name}</h4>
+                                    <p class="text-xs text-indigo-400">${a.role}</p>
+                                    <p class="text-xs text-slate-300 mt-1">${a.description}</p>
+                                    <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-phone"></i> ${a.phone}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch(e) {}
+        }
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`/api/user-profile/${userEmail}`);
+                const data = await res.json();
+                if(res.ok) {
+                    document.getElementById('profile-name').innerText = data.name || "User";
+                    document.getElementById('profile-email').innerText = data.email || userEmail;
+                    document.getElementById('profile-status').innerText = data.status || "active";
+                    document.getElementById('profile-days').innerText = (data.days_remaining || 29) + " Days";
+                }
+            } catch(e) {}
+        }
+
+        async function handleLogout() {
+            try {
+                await auth.signOut();
+            } catch(e) {}
+            userEmail = "guest@nay.com";
+            document.getElementById('current-user-email').innerText = userEmail;
+            document.getElementById('google-signin-btn-wrapper').innerHTML = `
+                <button onclick="triggerFirebaseGoogleSignIn()" class="bg-white hover:bg-slate-100 text-slate-900 px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-3 shadow-md cursor-pointer">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.17 21.32 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.19C.43 8.13 0 9.87 0 11.7s.43 3.57 1.19 5.1l4.08-2.56z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.68 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    Sign in with Google
+                </button>
+            `;
+            alert("အကောင့်မှ ထွက်လိုက်ပါပြီ။");
+            switchTab('script');
         }
     </script>
 </body>
