@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import Optional, List
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from google import genai
 
@@ -138,6 +138,16 @@ def verify_user_access(email: str):
 
 
 # --- APIs ---
+
+# Root Endpoint (index.html ကို တိုက်ရိုက်ပြသရန်)
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+async def serve_root():
+    try:
+        with open("index.html", "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "<h3>N Ai Studio API is running, but index.html was not found.</h3>"
+
 
 # Admin Dashboard လင့်ခ်ချိတ်ရန် (http://127.0.0.1:8000/admin)
 @app.get("/admin", include_in_schema=False)
