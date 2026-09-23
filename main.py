@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import os
 
 app = FastAPI()
 
@@ -45,10 +47,13 @@ class VideoRequest(BaseModel):
     quality: str
     auto_caption: bool
 
-# Root Endpoint (ဆာဗာအလုပ်လုပ်ခြင်း ရှိမရှိ စစ်ဆေးရန်)
-@app.get("/")
+# Root Endpoint (index.html ဖိုင်ကို တိုက်ရိုက်ပြသရန်)
+@app.get("/", response_class=HTMLResponse)
 def read_root():
-    return {"message": "NAY-Ai-Studio Backend Server is running successfully!"}
+    if os.path.exists("index.html"):
+        with open("index.html", "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>index.html not found on server</h1>"
 
 # API Endpoints တွေ
 @app.post("/api/signup")
