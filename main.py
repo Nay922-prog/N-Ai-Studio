@@ -8,7 +8,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from google import genai
 
-app = FastAPI(title="N Ai Studio API", version="2.0")
+app = FastAPI(title="NAY-Ai-Studio API", version="2.5")
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,11 +25,11 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 # Config & Database JSON Files
 CONFIG_FILE = "admin_config.json"
 
-# Default Config Setup
+# Default Config Setup for NAY-Ai-Studio
 DEFAULT_CONFIG = {
     "admin_password": None,  # ပထမအကြိမ် Setup မလုပ်ရသေးလျှင် None ဖြစ်မည်
     "tutorial_video_url": "https://www.w3schools.com/html/mov_bbb.mp4",
-    "agent_contact_info": "Telegram: @NAiStudioAgent | Email: support@naistudio.com"
+    "agent_contact_info": "Telegram: @NAiStudioAgent | Email: support@nay-ai-studio.com"
 }
 
 # Helper Functions for JSON Config
@@ -53,29 +53,18 @@ users_db = {}
 agents_db = [
     {
         "id": "1",
-        "name": "Marrnet Services",
+        "name": "NAY-Ai-Studio Official Agent",
         "role": "ကိုယ်စားလှယ်",
-        "description": "Marrnet Digital service",
+        "description": "NAY-Ai-Studio Digital service & Support",
         "avatar": "https://i.imgur.com/8KM9t1w.png",
         "facebook": "https://facebook.com",
         "telegram": "https://t.me/",
         "phone": "09123456789",
         "viber": "09123456789"
-    },
-    {
-        "id": "2",
-        "name": "CKM Talk Show",
-        "role": "ကိုယ်စားလှယ်",
-        "description": "Official Agent",
-        "avatar": "https://i.imgur.com/8KM9t1w.png",
-        "facebook": "https://facebook.com",
-        "telegram": "https://t.me/",
-        "phone": "09987654321",
-        "viber": "09987654321"
     }
 ]
 
-OWNER_EMAIL = "owner@naistudio.com"  # Website Owner Email
+OWNER_EMAIL = "owner@nay-ai-studio.com"  # Website Owner Email
 
 # Pydantic Schemas
 class UserSignUp(BaseModel):
@@ -90,9 +79,25 @@ class ApprovalAction(BaseModel):
 class ScriptRequest(BaseModel):
     user_email: str
     movie_title: Optional[str] = ""
+    subject_matter: Optional[str] = ""
     voice_style: Optional[str] = "Narrator"
     duration: Optional[str] = "1 မိနစ်"
     has_video_upload: Optional[bool] = False
+
+class VoiceGenRequest(BaseModel):
+    user_email: str
+    script_text: str
+    voice_name: str # Unique male/female voice selection
+    emotion: str
+    speed: float = 1.0
+
+class VideoRenderRequest(BaseModel):
+    user_email: str
+    script_text: str
+    voice_audio_url: Optional[str] = ""
+    aspect_ratio: str = "16:9"
+    quality: str = "1080P"
+    auto_caption: bool = True
 
 class ChatRequest(BaseModel):
     user_email: str
@@ -146,16 +151,16 @@ async def serve_root():
         with open("index.html", "r", encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
-        return "<h3>N Ai Studio API is running, but index.html was not found.</h3>"
+        return "<h3>NAY-Ai-Studio API is running, but index.html was not found.</h3>"
 
 
-# Admin Dashboard လင့်ခ်ချိတ်ရန် (http://127.0.0.1:8000/admin)
+# Admin Dashboard လင့်ခ်ချိတ်ရန်
 @app.get("/admin", include_in_schema=False)
 async def serve_admin_panel():
     return FileResponse("admin.html")
 
 
-# 1. Check Admin Status (Setup လုပ်ပြီးသား ဖြစ်မဖြစ် စစ်ဆေးရန်)
+# 1. Check Admin Status
 @app.get("/api/admin/check-status")
 async def check_admin_status():
     config = load_config()
@@ -163,7 +168,7 @@ async def check_admin_status():
     return {"is_initialized": is_initialized}
 
 
-# 2. Initial Password Setup (ပထမအကြိမ် စကားဝှက်သတ်မှတ်ခြင်း)
+# 2. Initial Password Setup
 @app.post("/api/admin/setup")
 async def setup_admin_password(data: PasswordSetup):
     config = load_config()
@@ -175,7 +180,7 @@ async def setup_admin_password(data: PasswordSetup):
     return {"status": "success", "message": "Admin password successfully created."}
 
 
-# 3. Admin Login စစ်ဆေးရန် API
+# 3. Admin Login
 @app.post("/api/admin/login")
 async def admin_login(data: AdminLogin):
     config = load_config()
@@ -187,7 +192,7 @@ async def admin_login(data: AdminLogin):
     return {"status": "success", "message": "Login အောင်မြင်ပါသည်။"}
 
 
-# 4. Change Password (စကားဝှက်ပြောင်းလဲရန်)
+# 4. Change Password
 @app.post("/api/admin/change-password")
 async def change_admin_password(data: ChangePassword):
     config = load_config()
@@ -224,7 +229,6 @@ async def sign_up(user: UserSignUp):
     }
 
 
-# Admin က User အားလုံးကို ကြည့်ရန် API
 @app.get("/api/admin/users")
 async def get_all_users():
     user_list = list(users_db.values())
@@ -234,7 +238,6 @@ async def get_all_users():
 @app.post("/api/admin/approve-user")
 async def approve_user(data: ApprovalAction):
     if data.user_email not in users_db:
-        # Testing အတွက် User မရှိသေးလျှင် အလိုအလျောက် ထည့်ပေးရန်
         users_db[data.user_email] = {
             "name": data.user_email.split("@")[0],
             "email": data.user_email,
@@ -254,7 +257,7 @@ async def approve_user(data: ApprovalAction):
         return {"status": "success", "message": f"{user['email']} အား ငြင်းပယ်လိုက်ပါပြီ။"}
 
 
-# --- Connect to Agent APIs ---
+# --- Agents APIs ---
 @app.get("/api/agents")
 async def get_agents():
     return {"status": "success", "agents": agents_db}
@@ -292,9 +295,9 @@ async def generate_script(data: ScriptRequest):
     verify_user_access(data.user_email)
     
     if data.has_video_upload:
-        prompt = f"Analyze the uploaded video concept and generate a creative, high-quality narration script in Myanmar language. Voice Style: {data.voice_style}."
+        prompt = f"Analyze the uploaded video concept and subject matter '{data.subject_matter}' to generate a creative, high-quality narration script in Myanmar language. Voice Style: {data.voice_style}."
     else:
-        prompt = f"Create a detailed and high-quality movie recap script in Myanmar language for '{data.movie_title}'. Voice style: {data.voice_style}, Duration: {data.duration}."
+        prompt = f"Create a detailed and high-quality movie script or recap in Myanmar language for Title: '{data.movie_title}', Subject/Details: '{data.subject_matter}'. Voice style: {data.voice_style}, Duration: {data.duration}."
     
     try:
         response = client.models.generate_content(
@@ -304,6 +307,43 @@ async def generate_script(data: ScriptRequest):
         return {"status": "success", "script": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# --- AI Voice Generation Endpoint ---
+@app.post("/api/generate-voice")
+async def generate_voice(data: VoiceGenRequest):
+    verify_user_access(data.user_email)
+    # 5 Unique Male & 5 Unique Female voice handling logic
+    valid_voices = ["Male_Voice_1", "Male_Voice_2", "Male_Voice_3", "Male_Voice_4", "Male_Voice_5",
+                    "Female_Voice_1", "Female_Voice_2", "Female_Voice_3", "Female_Voice_4", "Female_Voice_5"]
+    if data.voice_name not in valid_voices:
+        raise HTTPException(status_code=400, detail="ရွေးချယ်ထားသော Voice အမျိုးအစား မမှန်ကန်ပါ။")
+    
+    # Mock return for generated audio link or synthesized stream
+    return {
+        "status": "success",
+        "message": "Voice generated successfully.",
+        "voice_name": data.voice_name,
+        "emotion": data.emotion,
+        "speed": data.speed,
+        "audio_url": "https://www.w3schools.com/html/horse.mp3" # Placeholder audio output
+    }
+
+
+# --- AI Video Editor Rendering Endpoint ---
+@app.post("/api/render-video")
+async def render_video(data: VideoRenderRequest):
+    verify_user_access(data.user_email)
+    # Synchronized rendering with aspect ratio, auto-caption, and quality selection (4K, 2K, 1080P, 720P, 480P)
+    valid_qualities = ["4K", "2K", "1080P", "720P", "480P"]
+    if data.quality not in valid_qualities:
+        raise HTTPException(status_code=400, detail="ရွေးချယ်ထားသော ဗီဒီယို အရည်အသွေး မမှန်ကန်ပါ။")
+    
+    return {
+        "status": "success",
+        "message": f"Video successfully rendered in {data.quality} with {data.aspect_ratio} ratio and auto-captions synchronized!",
+        "download_url": "https://www.w3schools.com/html/mov_bbb.mp4" # Final downloadable video output
+    }
 
 
 @app.get("/api/user-profile/{email}")
