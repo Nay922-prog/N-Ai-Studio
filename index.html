@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N Ai Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-[#0f172a] border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+        <div>
+            <div class="p-6 flex items-center space-x-3 border-b border-slate-800/60">
+                <div class="bg-indigo-600 p-2.5 rounded-xl text-white font-black text-xl">N</div>
+                <div>
+                    <h1 class="font-bold text-base text-white tracking-wide">N Ai Studio</h1>
+                    <p class="text-xs text-slate-400">All-in-One AI Media Studio</p>
+                </div>
+            </div>
+
+            <!-- User Profile Box -->
+            <div class="mx-4 my-5 p-4 bg-slate-900/60 border border-slate-800 rounded-xl text-center">
+                <div class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-indigo-500/30 text-xl font-bold" id="userAvatar">
+                    👤
+                </div>
+                <h3 class="font-semibold text-sm text-white" id="navUserName">Guest User</h3>
+                <p class="text-xs text-amber-400 mt-1" id="navUserStatus">● Pending Login</p>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="px-3 space-y-1 text-sm font-medium">
+                <button onclick="switchTab('chat')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+                    <span>💬</span><span>Chat with AI</span>
+                </button>
+                <button onclick="switchTab('script')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition">
+                    <span>⚡</span><span>AI Script Generator</span>
+                </button>
+                <button onclick="switchTab('voice')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+                    <span>🎙️</span><span>AI Voice (Gemini)</span>
+                </button>
+                <button onclick="switchTab('editor')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+                    <span>🎬</span><span>AI Video Editor</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="p-4 border-t border-slate-800/60 space-y-1 text-sm text-slate-400">
+            <button onclick="switchTab('agent')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:text-white transition"><span>👥</span><span>Connect to Agent</span></button>
+            <button onclick="switchTab('profile')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:text-white transition"><span>👤</span><span>My Profile</span></button>
+            <button onclick="logout()" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition"><span>🚪</span><span>Logout</span></button>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- Top Navbar -->
+        <header class="h-16 border-b border-slate-800 bg-[#0b0f19]/80 backdrop-blur px-6 flex justify-between items-center">
+            <h2 id="pageTitle" class="font-bold text-lg text-white">N Ai Studio</h2>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Google Sign-In Button -->
+                <button onclick="signInWithGoogle()" id="signUpBtn" class="bg-white hover:bg-slate-100 text-slate-900 text-xs px-4 py-2.5 rounded-xl font-bold shadow-lg flex items-center space-x-2 transition">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.14C3.18 21.32 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.18C.43 8.15 0 9.89 0 12s.43 3.85 1.18 5.38l4.09-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.18 2.68 1.18 6.62l4.09 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    <span>Sign in with Google</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Panel -->
+        <main class="flex-1 p-6 overflow-y-auto">
+            <!-- 1. CHAT WITH AI -->
+            <div id="tab-chat" class="hidden h-[calc(100vh-140px)] flex flex-col bg-[#111827] border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+                <div class="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center space-x-3">
+                    <span class="text-2xl">🤖</span>
+                    <div>
+                        <h3 class="font-bold text-sm text-white">Gemini Flash Assistant</h3>
+                        <p class="text-xs text-emerald-400">● Active & Ready</p>
+                    </div>
+                </div>
+                <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-4 text-sm">
+                    <div class="bg-slate-800/80 p-3.5 rounded-2xl max-w-md text-slate-200">
+                        မင်္ဂလာပါ! မည်သည့်အရာကိုမဆို မေးမြန်းနိုင်ပါသည်။
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-800 bg-slate-900/40 flex gap-3">
+                    <input type="text" id="chatInput" placeholder="မေးခွန်းများ ရိုက်ထည့်ပါ..." class="flex-1 bg-[#0b0f19] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                    <button onclick="sendChatMessage()" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-3 rounded-xl font-semibold text-sm transition">Send 🚀</button>
+                </div>
+            </div>
+
+            <!-- 2. AI SCRIPT GENERATOR -->
+            <div id="tab-script" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-2xl p-6 space-y-5 shadow-xl">
+                    <h3 class="font-bold text-indigo-400 text-sm">⚡ AI Script Generator</h3>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2">ရုပ်ရှင်ခေါင်းစဉ် / အကြောင်းအရာ</label>
+                        <input type="text" id="movieTitle" placeholder="ဥပမာ - ဇာတ်လမ်း အကျဉ်း..." class="w-full bg-[#0b0f19] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <button onclick="generateScriptAction()" class="w-full bg-indigo-600 hover:bg-indigo-500 py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition">
+                        Generate Script 🚀
+                    </button>
+                </div>
+
+                <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-xl">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Generated Script Output</h4>
+                        <div id="scriptOutput" class="bg-[#0b0f19] border border-slate-800 rounded-xl p-4 text-sm h-72 overflow-y-auto text-slate-300 leading-relaxed whitespace-pre-line">
+                            Script များ ဒီနေရာတွင် ထွက်ပေါ်လာမည်...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. AI VOICE -->
+            <div id="tab-voice" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6">
+                <h3 class="font-bold text-indigo-400 text-sm mb-3">🎙️ AI Voice Settings</h3>
+                <p class="text-xs text-slate-400">Voice Generation settings.</p>
+            </div>
+
+            <!-- 4. AI VIDEO EDITOR -->
+            <div id="tab-editor" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6">
+                <h3 class="font-bold text-indigo-400 text-sm mb-3">🎬 AI Video Editor</h3>
+                <p class="text-xs text-slate-400">Video editing tools.</p>
+            </div>
+
+            <!-- 5. CONNECT TO AGENT -->
+            <div id="tab-agent" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="font-bold text-indigo-400 text-sm mb-3">👥 Connect to Agent</h3>
+                <p class="text-sm text-slate-300">Telegram: @NAiStudioAgent | Email: support@naistudio.com</p>
+            </div>
+
+            <!-- 6. MY PROFILE -->
+            <div id="tab-profile" class="hidden bg-[#111827] border border-slate-800 rounded-2xl p-6 shadow-xl max-w-md">
+                <h3 class="font-bold text-indigo-400 text-sm mb-4">👤 My Profile Information</h3>
+                <div class="space-y-3 text-sm text-slate-300">
+                    <p><strong>Name:</strong> <span id="profName">Guest User</span></p>
+                    <p><strong>Email:</strong> <span id="profEmail">Not Signed In</span></p>
+                    <p><strong>Status:</strong> <span id="profStatus" class="text-amber-400">Pending</span></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Your actual Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6dy1inucTCiZLjDVfPibMe7f4j-xL7Bo",
+            authDomain: "n-ai-studio.firebaseapp.com",
+            projectId: "n-ai-studio",
+            storageBucket: "n-ai-studio.firebasestorage.app",
+            messagingSenderId: "814391614488",
+            appId: "1:814391614488:web:81fb82041f07415f75376d",
+            measurementId: "G-PFKHZKH18D"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        let currentUser = null;
+
+        function switchTab(tab) {
+            ['chat', 'script', 'voice', 'editor', 'agent', 'profile'].forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                if(el) el.classList.add('hidden');
+            });
+            const target = document.getElementById('tab-' + tab);
+            if(target) target.classList.remove('hidden');
+        }
+
+        // Google Sign-In Popup Function
+        async function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+                currentUser = user.email;
+
+                // Backend သို့ အကောင့်အချက်အလက် ပို့ရန်
+                const res = await fetch('http://127.0.0.1:8000/api/signup', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ name: user.displayName, email: user.email })
+                });
+                const data = await res.json();
+
+                // UI Update
+                document.getElementById('navUserName').innerText = user.displayName;
+                document.getElementById('navUserStatus').innerText = "● Pending Approval";
+                document.getElementById('profName').innerText = user.displayName;
+                document.getElementById('profEmail').innerText = user.email;
+                
+                const btn = document.getElementById('signUpBtn');
+                btn.innerHTML = `<span>🟢 ${user.displayName}</span>`;
+                btn.classList.remove('bg-white', 'text-slate-900');
+                btn.classList.add('bg-emerald-600', 'text-white');
+
+                alert(data.message + "\n(Admin မှ လက်ခံပေးရန် စောင့်ဆိုင်းနေပါသည်)");
+            } catch (error) {
+                console.error(error);
+                alert("Google ဖြင့် ဝင်ရောက်ရာတွင် အမှားအယွင်း ရှိခဲ့ပါသည်။ Firebase Console (Authentication -> Sign-in method) တွင် Google ကို Enable လုပ်ထားခြင်း ရှိမရှိ စစ်ဆေးပါ။");
+            }
+        }
+
+        async function sendChatMessage() {
+            if(!currentUser) return alert("ကျေးဇူးပြု၍ ပထမဦးစွာ Google ဖြင့် Sign in လုပ်ပါ။");
+            const msg = document.getElementById('chatInput').value;
+            if(!msg) return;
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `<div class="text-right"><span class="bg-indigo-600 p-3 rounded-2xl inline-block text-xs">${msg}</span></div>`;
+            document.getElementById('chatInput').value = '';
+
+            const res = await fetch('http://127.0.0.1:8000/api/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({user_email: currentUser, message: msg})
+            });
+            const data = await res.json();
+            if(res.ok) {
+                chatBox.innerHTML += `<div><span class="bg-slate-800 p-3 rounded-2xl inline-block text-xs">${data.reply}</span></div>`;
+            } else {
+                alert(data.detail);
+            }
+        }
+
+        async function generateScriptAction() {
+            if(!currentUser) return alert("ကျေးဇူးပြု၍ ပထမဦးစွာ Google ဖြင့် Sign in လုပ်ပါ။");
+            const title = document.getElementById('movieTitle').value;
+            const scriptOutput = document.getElementById('scriptOutput');
+            scriptOutput.innerText = "Generating AI Script...";
+
+            const res = await fetch('http://127.0.0.1:8000/api/generate-script', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({user_email: currentUser, movie_title: title})
+            });
+            const data = await res.json();
+            if(res.ok) {
+                scriptOutput.innerText = data.script;
+            } else {
+                alert(data.detail);
+            }
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                currentUser = null;
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>
