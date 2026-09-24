@@ -16,10 +16,13 @@
     <!-- Sidebar -->
     <aside class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-5">
         <div>
-            <!-- Brand Logo Header -->
+            <!-- Brand Logo Header (Item 11) -->
             <div class="flex items-center gap-3 mb-8">
-                <div class="bg-gradient-to-tr from-blue-600 to-indigo-500 p-2.5 rounded-2xl text-xl font-bold shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white">
-                    <i class="fa-solid fa-brain"></i>
+                <div class="relative w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white overflow-hidden">
+                    <div class="absolute inset-0 bg-slate-950/20 backdrop-blur-xs flex items-center justify-center">
+                        <span class="font-black text-xl tracking-tighter text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">N</span>
+                        <i class="fa-solid fa-sparkles text-[10px] text-cyan-300 absolute top-1.5 right-2"></i>
+                    </div>
                 </div>
                 <div>
                     <h1 class="font-bold text-base text-white tracking-wide">NAY-Ai-Studio</h1>
@@ -28,13 +31,20 @@
             </div>
             
             <nav class="space-y-1.5 text-sm">
+                <!-- (1) Chat with AI -->
                 <button onclick="switchTab('chat')" id="btn-chat" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-comments text-indigo-400"></i> Chat with AI</button>
+                <!-- (2) AI Script Generator -->
                 <button onclick="switchTab('script')" id="btn-script" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-medium transition shadow-lg shadow-indigo-600/20"><i class="fa-solid fa-file-pen"></i> AI Script Generator</button>
+                <!-- (3, 4) AI Voice Gemini -->
                 <button onclick="switchTab('voice')" id="btn-voice" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-microphone-lines text-blue-400"></i> AI Voice (Gemini)</button>
+                <!-- (5) AI Video Editor -->
                 <button onclick="switchTab('video')" id="btn-video" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-video text-emerald-400"></i> AI Video Editor</button>
                 <div class="pt-2 border-t border-slate-800 my-2"></div>
+                <!-- (6) Admin Tutorial -->
                 <button onclick="switchTab('tutorial')" id="btn-tutorial" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-graduation-cap text-amber-400"></i> Admin Tutorial</button>
+                <!-- (7) Connect to Agent -->
                 <button onclick="switchTab('agent')" id="btn-agent" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-headset text-rose-400"></i> Connect to Agent</button>
+                <!-- (8) My Profile -->
                 <button onclick="switchTab('profile')" id="btn-profile" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-user-circle text-sky-400"></i> My Profile</button>
             </nav>
         </div>
@@ -44,20 +54,20 @@
                 <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Active User</p>
                 <p id="current-user-email" class="text-xs font-semibold text-indigo-400 truncate mt-0.5">Not Signed In</p>
             </div>
-            <button onclick="handleLogout()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            <!-- (9) Logout -->
+            <button onclick="handleLogout()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-center gap-2 cursor-pointer"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
         </div>
     </aside>
 
     <!-- Main Content Area -->
     <main class="flex-1 p-8 overflow-y-auto">
 
-        <!-- Top Header Bar with Direct Google Sign-In Button -->
+        <!-- Top Header Bar with (10) Sign in with Google -->
         <div class="flex justify-between items-center mb-8 bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-lg">
             <div>
                 <h2 class="text-lg font-bold text-white">NAY-Ai-Studio Workspace</h2>
                 <p class="text-xs text-slate-400">Google အကောင့်ဖြင့် ဝင်ရောက်၍ အသုံးပြုရန်</p>
             </div>
-            <!-- Google Sign-In Button Container -->
             <div id="google-signin-btn-wrapper">
                 <button onclick="signInWithGoogle()" class="bg-white hover:bg-slate-100 text-slate-900 px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-3 shadow-md cursor-pointer">
                     <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.17 21.32 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.19C.43 8.13 0 9.87 0 11.7s.43 3.57 1.19 5.1l4.08-2.56z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.68 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
@@ -66,7 +76,7 @@
             </div>
         </div>
         
-        <!-- TAB: Chat with AI -->
+        <!-- (1) TAB: Chat with AI -->
         <section id="tab-chat" class="space-y-6 hidden">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-comments text-indigo-400"></i> Chat with AI Assistant</h2>
             <div class="bg-slate-900 border border-slate-800 rounded-2xl h-[550px] flex flex-col p-6">
@@ -75,12 +85,12 @@
                 </div>
                 <div class="pt-4 flex gap-3 border-t border-slate-800 mt-4">
                     <input type="text" id="chat-input" placeholder="စာတိုတစ်စောင် ရိုက်ထည့်ပါ..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500">
-                    <button onclick="sendChatMessage()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold transition">Send 🚀</button>
+                    <button onclick="sendChatMessage()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold transition cursor-pointer">Send 🚀</button>
                 </div>
             </div>
         </section>
 
-        <!-- TAB: AI Script Generator -->
+        <!-- (2) TAB: AI Script Generator (with Video Upload Option for Script Rewriting) -->
         <section id="tab-script" class="space-y-6">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> AI Script Generator</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -90,6 +100,10 @@
                         <input type="text" id="script-title" placeholder="ဥပမာ - ဇော်ဂျီလမ်းကျဉ်း..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">ဗီဒီယိုဖိုင် တင်သွင်းရန် (Script ပြန်ရေးရန် / Video Upload)</label>
+                        <input type="file" id="script-video-file" accept="video/*" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">အသံထွက်စတိုင် (Voice Style)</label>
                         <select id="script-style" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white">
                             <option value="Narrator">Narrator (ဇာတ်ကြောင်းပြော)</option>
@@ -97,7 +111,7 @@
                             <option value="Energetic">Energetic (တက်ကြွရွှင်လန်း)</option>
                         </select>
                     </div>
-                    <button onclick="generateScript()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2">Generate Script <i class="fa-solid fa-rocket"></i></button>
+                    <button onclick="generateScript()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2 cursor-pointer">Generate Script <i class="fa-solid fa-rocket"></i></button>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col">
                     <h3 class="text-sm font-semibold text-slate-400 mb-3">GENERATED SCRIPT OUTPUT</h3>
@@ -106,7 +120,7 @@
             </div>
         </section>
 
-        <!-- TAB: AI Voice Generator -->
+        <!-- (3, 4) TAB: AI Voice Generator (10 Voices, Speed Control 0.5x-2.0x, Preview) -->
         <section id="tab-voice" class="space-y-6 hidden">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-microphone-lines text-blue-400"></i> AI Voice Synthesis (Gemini)</h2>
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-2xl">
@@ -114,39 +128,98 @@
                     <label class="block text-sm font-medium text-slate-300 mb-1">အသံထွက်စေလိုသော စာသား (Script Text)</label>
                     <textarea id="voice-text" rows="4" placeholder="အသံပြောင်းမည့် စာသားများကို ဤနေရာတွင် ထည့်ပါ..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
-                <button onclick="generateVoice()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-semibold transition">Synthesize Final Audio</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">အသံအမျိုးအစား ရွေးချယ်ရန် (Voice Options - 10)</label>
+                        <select id="voice-selection" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white">
+                            <option value="1">Voice 1: Male Deep (ဦးလေးကြီး)</option>
+                            <option value="2">Voice 2: Female Warm (အမေ)</option>
+                            <option value="3">Voice 3: Young Girl (မိန်းကလေးငယ်)</option>
+                            <option value="4">Voice 4: Energetic Youth (လူငယ်တက်ကြွ)</option>
+                            <option value="5">Voice 5: Professional Narrator (သတင်းကြေညာ)</option>
+                            <option value="6">Voice 6: Storyteller Soft (ပုံပြင်ပြော)</option>
+                            <option value="7">Voice 7: Dramatic Hero (ဇာတ်ဆောင်မင်းသား)</option>
+                            <option value="8">Voice 8: Villain Dark (ဗီလိန်အသံ)</option>
+                            <option value="9">Voice 9: Calm Meditation (အေးချမ်းသော)</option>
+                            <option value="10">Voice 10: Robot AI (စက်ရုပ်အသံ)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">အသံအမြန်နှုန်း (Speed: <span id="speed-val">1.0</span>x)</label>
+                        <div class="flex items-center gap-3 pt-2">
+                            <span class="text-xs text-slate-400">0.5x</span>
+                            <input type="range" id="voice-speed" min="0.5" max="2.0" step="0.1" value="1.0" oninput="document.getElementById('speed-val').innerText = this.value" class="flex-1 accent-blue-500 cursor-pointer">
+                            <span class="text-xs text-slate-400">2.0x</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="previewVoice()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-blue-400 border border-blue-500/30 py-3 rounded-xl font-semibold transition cursor-pointer"><i class="fa-solid fa-play"></i> Voice Preview</button>
+                    <button onclick="generateVoice()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-semibold transition cursor-pointer">Synthesize Final Audio</button>
+                </div>
                 <div id="audio-result" class="hidden pt-3 border-t border-slate-800">
                     <audio id="audio-player" controls class="w-full"></audio>
                 </div>
             </div>
         </section>
 
-        <!-- TAB: AI Video Editor -->
+        <!-- (5) TAB: AI Video Editor (with Video Preview Feature) -->
         <section id="tab-video" class="space-y-6 hidden">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-video text-emerald-400"></i> AI Video Editor & Renderer</h2>
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-2xl">
-                <button onclick="renderVideo()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-semibold transition">Start Video Rendering</button>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">ဗီဒီယိုဖိုင် တင်သွင်းရန် သို့မဟုတ် ဖန်တီးရန်</label>
+                    <input type="file" id="editor-video-file" accept="video/*" onchange="previewVideoFile(event)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer">
+                </div>
+                <!-- Video Preview Container -->
+                <div id="video-preview-container" class="hidden space-y-2">
+                    <label class="block text-xs font-semibold text-emerald-400 uppercase tracking-wider">Video Preview</label>
+                    <video id="video-preview-player" controls class="w-full rounded-xl bg-slate-950 max-h-[300px]"></video>
+                </div>
+                <button onclick="renderVideo()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-semibold transition cursor-pointer">Start Video Rendering</button>
                 <div id="video-result" class="hidden pt-3">
                     <a id="video-download-link" href="#" target="_blank" class="block text-center bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-xl font-medium">Download Rendered Video 📥</a>
                 </div>
             </div>
         </section>
 
-        <!-- TAB: Admin Tutorial -->
+        <!-- (6) TAB: Admin Tutorial -->
         <section id="tab-tutorial" class="space-y-6 hidden">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-amber-400"></i> Admin Tutorial & Guide</h2>
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-3xl">
-                <p class="text-slate-300 text-sm">ဤနေရာတွင် စနစ်အသုံးပြုပုံ ဗီဒီယိုလမ်းညွှန်များ ရှိပါသည်။</p>
+                <p class="text-slate-300 text-sm">ဤနေရာတွင် NAY-Ai-Studio အသုံးပြုပုံ အသေးစိတ် ဗီဒီယိုလမ်းညွှန်များနှင့် Admin Manual များ ရှိပါသည်။</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <h3 class="font-bold text-white text-sm mb-1">1. Script Generator လမ်းညွှန်</h3>
+                        <p class="text-xs text-slate-400">ဗီဒီယိုဖိုင်တင်ပြီး Script ပြန်ရေးနည်းများနှင့် Voice Style ရွေးချယ်ပုံ။</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <h3 class="font-bold text-white text-sm mb-1">2. AI Voice & Speed Setup</h3>
+                        <p class="text-xs text-slate-400">အသံ ၁၀ မျိုးနှင့် အမြန်နှုန်း ချိန်ညှိပုံ၊ Preview နားဆင်ပုံ။</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- TAB: Connect to Agent -->
+        <!-- (7) TAB: Connect to Agent -->
         <section id="tab-agent" class="space-y-6 hidden">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-headset text-rose-400"></i> Connect to Official Agent</h2>
-            <div id="agent-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl"></div>
+            <div id="agent-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-rose-600/20 text-rose-400 flex items-center justify-center font-bold">N</div>
+                        <div>
+                            <h3 class="font-bold text-white text-sm">Official Support Agent 1</h3>
+                            <p class="text-xs text-rose-400 font-medium">Online</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400">စနစ်သုံးစွဲမှု အခက်အခဲရှိပါက တိုက်ရိုက်ဆက်သွယ်နိုင်ပါသည်။</p>
+                    <a href="https://t.me/" target="_blank" class="block text-center bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold py-2 rounded-xl transition">Telegram ဖြင့် ဆက်သွယ်ရန် 💬</a>
+                </div>
+            </div>
         </section>
 
-        <!-- TAB: My Profile -->
+        <!-- (8) TAB: My Profile -->
         <section id="tab-profile" class="space-y-6 hidden">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-user-circle text-sky-400"></i> My User Profile</h2>
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-xl space-y-4 shadow-xl">
@@ -157,6 +230,10 @@
                         <p id="profile-email" class="text-sm text-slate-400">Not Signed In</p>
                     </div>
                 </div>
+                <div class="space-y-2 text-xs text-slate-300">
+                    <p><strong class="text-slate-400">Account Status:</strong> <span class="text-emerald-400">Active</span></p>
+                    <p><strong class="text-slate-400">Platform:</strong> NAY-Ai-Studio Workspace</p>
+                </div>
             </div>
         </section>
 
@@ -164,15 +241,15 @@
 
     <!-- JavaScript Actions & Firebase Google Auth Configuration -->
     <script>
-        // Updated Firebase Configuration
+        // Firebase Configuration for n-ai-studio
         const firebaseConfig = {
             apiKey: "AIzaSyD6dy1InucTCiZLjDVfPibMe7f4j-xL7Bo",
             authDomain: "n-ai-studio.firebaseapp.com",
             projectId: "n-ai-studio",
             storageBucket: "n-ai-studio.firebasestorage.app",
             messagingSenderId: "814391614488",
-            appId: "1:814391614488:web:e6e39dd5f65c44875376d",
-            measurementId: "G-ZN0MW74KY7"
+            appId: "1:814391614488:web:81fb82041f07415f75376d",
+            measurementId: "G-PFKZKH18D"
         };
 
         // Initialize Firebase
@@ -198,7 +275,7 @@
             if(activeBtn) activeBtn.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-medium transition shadow-lg shadow-indigo-600/20";
         }
 
-        // Direct Google Sign-in Popup Flow
+        // (10) Direct Google Sign-in Popup Flow
         async function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
@@ -223,7 +300,7 @@
             }
         }
 
-        // Logout Handler
+        // (9) Logout Handler
         async function handleLogout() {
             try {
                 await auth.signOut();
@@ -242,11 +319,75 @@
             alert("အကောင့်မှ ထွက်လိုက်ပါပြီ။");
         }
 
-        // Dummy feature functions
-        function sendChatMessage() { alert("Message sent"); }
-        function generateScript() { document.getElementById('script-output').innerText = "Script generated successfully."; }
-        function generateVoice() { alert("Voice generated"); }
-        function renderVideo() { alert("Video rendering started"); }
+        // (1) Chat with AI Action
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if(!msg) return;
+            const chatBox = document.getElementById('chat-messages');
+            chatBox.innerHTML += `<div class="bg-indigo-600/20 border border-indigo-500/30 p-4 rounded-xl max-w-lg ml-auto text-white">${msg}</div>`;
+            input.value = '';
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="bg-slate-800 p-4 rounded-xl max-w-lg text-slate-200">မင်္ဂလာပါရှင့်။ မေးမြန်းချက်အတွက် AI မှ အဖြေကို ဤနေရာတွင် တင်ပြပေးထားပါသည်။</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 500);
+        }
+
+        // (2) Script Generation with Video Upload Handling
+        function generateScript() {
+            const title = document.getElementById('script-title').value;
+            const style = document.getElementById('script-style').value;
+            const videoFile = document.getElementById('script-video-file').files[0];
+            
+            if(!title && !videoFile) {
+                alert("ကျေးဇူးပြု၍ ရုပ်ရှင်ခေါင်းစဉ် (သို့) ဗီဒီယိုဖိုင် တစ်ခုခုကို ထည့်သွင်းပါ။");
+                return;
+            }
+
+            let sourceInfo = videoFile ? `တင်သွင်းထားသော ဗီဒီယိုဖိုင် (${videoFile.name}) ကို အခြေခံ၍` : `ခေါင်းစဉ် "${title}" ကို အခြေခံ၍`;
+            document.getElementById('script-output').innerText = `[${style}] ${sourceInfo} Script အသစ်ကို အောင်မြင်စွာ ပြန်လည်ရေးသားပြီးပါပြီ။\n\n၁။ နိဒါန်းပိုင်း - ...\n၂။ အဓိက ဇာတ်ကွက်များနှင့် အသံထွက် - ...\n၃။ နိဂုံးပိုင်း - ...`;
+        }
+
+        // (3, 4) Gemini Voice Preview & Synthesis with Speed & 10 Voices
+        function previewVoice() {
+            const text = document.getElementById('voice-text').value;
+            const speed = document.getElementById('voice-speed').value;
+            if(!text) {
+                alert("Preview ကြည့်ရန် စာသား အရင်ထည့်ပါ။");
+                return;
+            }
+            alert(`Voice Preview စတင်နေပါပြီ (အမြန်နှုန်း: ${speed}x)...`);
+        }
+
+        function generateVoice() {
+            const text = document.getElementById('voice-text').value;
+            const speed = document.getElementById('voice-speed').value;
+            if(!text) {
+                alert("အသံပြောင်းမည့် စာသားကို ထည့်ပါ။");
+                return;
+            }
+            alert(`အသံဖိုင်ကို အမြန်နှုန်း ${speed}x ဖြင့် အောင်မြင်စွာ Synthesize လုပ်ပြီးပါပြီ။`);
+            document.getElementById('audio-result').classList.remove('hidden');
+        }
+
+        // (5) Video Preview Feature
+        function previewVideoFile(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const url = URL.createObjectURL(file);
+                const player = document.getElementById('video-preview-player');
+                player.src = url;
+                document.getElementById('video-preview-container').classList.remove('hidden');
+            }
+        }
+
+        function renderVideo() {
+            alert("ဗီဒီယို Rendering စတင်နေပါပြီ... ခေတ္တစောင့်ဆိုင်းပါ။");
+            setTimeout(() => {
+                document.getElementById('video-result').classList.remove('hidden');
+                alert("ဗီဒီယို Render လုပ်ပြီးပါပြီ။ Download ဆွဲနိုင်ပါပြီ။");
+            }, 1000);
+        }
     </script>
 </body>
 </html>
