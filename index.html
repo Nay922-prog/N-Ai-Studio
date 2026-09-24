@@ -156,19 +156,19 @@
             </div>
         </section>
 
-        <!-- TAB: AI Video Editor (with Video Preview, Quality Settings & Auto-Caption) -->
+        <!-- TAB: AI Video Editor (Fixed Video Preview Player) -->
         <section id="tab-video" class="space-y-6 hidden">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-video text-emerald-400"></i> AI Video Editor & Renderer</h2>
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-2xl">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">ဗီဒီယိုဖိုင် တင်သွင်းရန်</label>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">ဗီဒီယိုဖိုင် တင်သွင်းရန် (Video Upload)</label>
                     <input type="file" id="editor-video-file" accept="video/*" onchange="previewVideoFile(event)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer">
                 </div>
                 
-                <!-- Video Preview Container -->
-                <div id="video-preview-container" class="hidden space-y-2">
+                <!-- Video Preview Container (Guaranteed Visibility when file selected) -->
+                <div id="video-preview-container" class="hidden space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
                     <label class="block text-xs font-semibold text-emerald-400 uppercase tracking-wider">Video Preview Player</label>
-                    <video id="video-preview-player" controls class="w-full rounded-xl bg-slate-950 max-h-[250px] object-contain border border-slate-800"></video>
+                    <video id="video-preview-player" controls class="w-full rounded-lg bg-black max-h-[300px] object-contain"></video>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -203,13 +203,14 @@
             </div>
         </section>
 
-        <!-- TAB: Admin Dashboard -->
+        <!-- TAB: Admin Dashboard (With Accept/Reject Users, Agent Config, Usage Limits) -->
         <section id="tab-admindash" class="space-y-6 hidden">
-            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-gauge-high text-purple-400"></i> Admin Dashboard (Website Owner)</h2>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-gauge-high text-purple-400"></i> Admin Dashboard (Website Owner Panel)</h2>
+            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                    <p class="text-xs text-slate-400">Total Users</p>
-                    <h3 class="text-2xl font-bold text-white mt-1">1,248</h3>
+                    <p class="text-xs text-slate-400">Total Registered Users</p>
+                    <h3 id="admin-total-users" class="text-2xl font-bold text-white mt-1">1</h3>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
                     <p class="text-xs text-slate-400">Rendered Videos Today</p>
@@ -220,11 +221,60 @@
                     <h3 class="text-2xl font-bold text-indigo-400 mt-1">Operational 🟢</h3>
                 </div>
             </div>
+
+            <!-- Website Settings & Usage Limits Configuration -->
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-                <h3 class="font-bold text-white text-sm">Site Configuration & Management</h3>
-                <div class="flex gap-4">
-                    <button onclick="alert('System cache cleared successfully.')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-xs font-semibold cursor-pointer">Clear Cache</button>
-                    <button onclick="alert('Broadcast sent to all users.')" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold cursor-pointer">Broadcast Announcement</button>
+                <h3 class="font-bold text-white text-sm flex items-center gap-2"><i class="fa-solid fa-sliders text-purple-400"></i> Global Settings & Usage Limits</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Default User Usage Limit (Videos/Day)</label>
+                        <input type="number" id="setting-usage-limit" value="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Agent Contact Info (Telegram / Email)</label>
+                        <input type="text" id="setting-agent-info" placeholder="@official_agent" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm">
+                    </div>
+                </div>
+                <button onclick="saveAdminSettings()" class="bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-xl text-xs font-semibold cursor-pointer">Save Settings</button>
+            </div>
+
+            <!-- Manage Connect to Agents Section -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                <h3 class="font-bold text-white text-sm flex items-center gap-2"><i class="fa-solid fa-headset text-rose-400"></i> Manage Connect to Agents</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input type="text" id="agent-name" placeholder="Agent Name (e.g. Mg Mg)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white">
+                    <input type="text" id="agent-role" placeholder="Role (e.g. Support Lead)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white">
+                    <input type="text" id="agent-desc" placeholder="Description / Specialty" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white">
+                    <input type="text" id="agent-phone" placeholder="Phone Number / Telegram Link" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white">
+                </div>
+                <button onclick="addAgent()" class="bg-rose-600 hover:bg-rose-500 text-white px-5 py-2.5 rounded-xl text-xs font-semibold cursor-pointer">+ Add Agent</button>
+            </div>
+
+            <!-- User Approvals & Expiry Management (Accept/Reject Users) -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                <h3 class="font-bold text-white text-sm flex items-center gap-2"><i class="fa-solid fa-users-gear text-emerald-400"></i> User Approvals & Expiry Management</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400">
+                                <th class="p-3">EMAIL</th>
+                                <th class="p-3">STATUS</th>
+                                <th class="p-3">EXPIRY DATE</th>
+                                <th class="p-3">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-user-table-body">
+                            <tr class="border-b border-slate-800/50">
+                                <td class="p-3 text-slate-300">current-user@example.com</td>
+                                <td class="p-3"><span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full font-semibold">Pending</span></td>
+                                <td class="p-3 text-slate-400">2026-10-24</td>
+                                <td class="p-3 flex gap-2">
+                                    <button onclick="approveUser(this)" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-medium cursor-pointer">Accept</button>
+                                    <button onclick="rejectUser(this)" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-lg font-medium cursor-pointer">Reject</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -245,12 +295,12 @@
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-rose-600/20 text-rose-400 flex items-center justify-center font-bold">N</div>
                         <div>
-                            <h3 class="font-bold text-white text-sm">Official Support Agent 1</h3>
-                            <p class="text-xs text-rose-400 font-medium">Online</p>
+                            <h3 class="font-bold text-white text-sm">Mg Mg</h3>
+                            <p class="text-xs text-rose-400 font-medium">Support Lead</p>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-400">စနစ်သုံးစွဲမှု အခက်အခဲရှိပါက တိုက်ရိုက်ဆက်သွယ်နိုင်ပါသည်။</p>
-                    <a href="https://t.me/" target="_blank" class="block text-center bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold py-2 rounded-xl transition">Telegram ဖြင့် ဆက်သွယ်ရန် 💬</a>
+                    <p class="text-xs text-slate-400">ဖောက်သည်များအား နည်းပညာအကူအညီပေးမည့် ကိုယ်စားလှယ်။</p>
+                    <a href="https://t.me/" target="_blank" class="block text-center bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold py-2 rounded-xl transition">Telegram / Phone: +95912345678 💬</a>
                 </div>
             </div>
         </section>
@@ -267,7 +317,7 @@
                     </div>
                 </div>
                 <div class="space-y-2 text-xs text-slate-300">
-                    <p><strong class="text-slate-400">Account Status:</strong> <span class="text-emerald-400">Active</span></p>
+                    <p><strong class="text-slate-400">Account Status:</strong> <span id="profile-status" class="text-emerald-400">Active</span></p>
                     <p><strong class="text-slate-400">Platform:</strong> NAY-Ai-Studio Workspace</p>
                 </div>
             </div>
@@ -381,7 +431,7 @@
             }
 
             let sourceInfo = videoFile ? `တင်သွင်းထားသော ဗီဒီယိုဖိုင် (${videoFile.name}) ကို အခြေခံ၍` : `ခေါင်းစဉ် "${title}" ကို အခြေခံ၍`;
-            document.getElementById('script-output').innerText = `[${style}] ${sourceInfo} Script အသစ်ကို အောင်မြင်စွာ ပြန်လည်ရေးသားပြီးပါပြီ။\n\n၁။ နိဒါန်းပိုင်း - ...\n၂။ အဓိက ဇာတ်ကွက်များနှင့် အသံထွက် - ...\n၃။ နိဂုံးပိုင်း - ...`;
+            document.getElementById('script-output').innerText = `[${style}] ${sourceInfo} Script အသစ်ကို အောင်မြင်စွာ ပြန်လည်ရေးသားပြီးပါပြီ。\n\n၁။ နိဒါန်းပိုင်း - ...\n၂။ အဓိက ဇာတ်ကွက်များနှင့် အသံထွက် - ...\n၃။ နိဂုံးပိုင်း - ...`;
         }
 
         // Voice Preview & Synthesis
@@ -406,14 +456,15 @@
             document.getElementById('audio-result').classList.remove('hidden');
         }
 
-        // Video Preview
+        // Fixed Video Preview Logic
         function previewVideoFile(event) {
             const file = event.target.files[0];
             if(file) {
-                const url = URL.createObjectURL(file);
+                const videoURL = URL.createObjectURL(file);
                 const player = document.getElementById('video-preview-player');
-                player.src = url;
+                player.src = videoURL;
                 document.getElementById('video-preview-container').classList.remove('hidden');
+                player.load();
             }
         }
 
@@ -425,8 +476,58 @@
             alert(`ဗီဒီယို Rendering စတင်နေပါပြီ... (${quality}, Captions: ${caption})`);
             setTimeout(() => {
                 document.getElementById('video-result').classList.remove('hidden');
+                document.getElementById('video-download-link').href = "#";
                 alert("ဗီဒီယို Render လုပ်ပြီးပါပြီ။ Download ဆွဲနိုင်ပါပြီ။");
             }, 1000);
+        }
+
+        // Admin Panel Functions: Accept/Reject, Agents, Limits
+        function approveUser(btn) {
+            const row = btn.closest('tr');
+            row.cells[1].innerHTML = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-semibold">Accepted</span>`;
+            btn.parentElement.innerHTML = `<span class="text-xs text-slate-500">Approved</span>`;
+            alert("User ကို လက်ခံအတည်ပြုပြီးပါပြီ။");
+        }
+
+        function rejectUser(btn) {
+            const row = btn.closest('tr');
+            row.cells[1].innerHTML = `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-full font-semibold">Rejected</span>`;
+            btn.parentElement.innerHTML = `<span class="text-xs text-slate-500">Denied</span>`;
+            alert("User ကို ငြင်းပယ်လိုက်ပါပြီ။");
+        }
+
+        function saveAdminSettings() {
+            const limit = document.getElementById('setting-usage-limit').value;
+            const agentInfo = document.getElementById('setting-agent-info').value;
+            alert(`ဆက်တင်များကို အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ။ (Usage Limit: ${limit} videos/day)`);
+        }
+
+        function addAgent() {
+            const name = document.getElementById('agent-name').value;
+            const role = document.getElementById('agent-role').value;
+            const desc = document.getElementById('agent-desc').value;
+            const phone = document.getElementById('agent-phone').value;
+
+            if(!name) {
+                alert("Agent အမည် ထည့်သွင်းပါ။");
+                return;
+            }
+
+            const container = document.getElementById('agent-list-container');
+            container.innerHTML += `
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-rose-600/20 text-rose-400 flex items-center justify-center font-bold">${name.charAt(0)}</div>
+                        <div>
+                            <h3 class="font-bold text-white text-sm">${name}</h3>
+                            <p class="text-xs text-rose-400 font-medium">${role || 'Support'}</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400">${desc || 'အကူအညီပေးမည့် ကိုယ်စားလှယ်။'}</p>
+                    <a href="https://t.me/" target="_blank" class="block text-center bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold py-2 rounded-xl transition">Contact: ${phone || 'Available'} 💬</a>
+                </div>
+            `;
+            alert("Agent အသစ်ကို အောင်မြင်စွာ ထည့်သွင်းပြီးပါပြီ။");
         }
     </script>
 </body>
