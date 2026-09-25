@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
+import uvicorn
 
 app = FastAPI()
 
@@ -14,6 +15,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Admin Password Store (Temporary Default: TempPassword123)
+admin_credentials = {
+    "password": "TempPassword123"
+}
+
+class AdminLoginRequest(BaseModel):
+    password: str
+
+class PasswordChangeRequest(BaseModel):
+    old_password: str
+    new_password: str
+    confirm_password: str
 
 class UserSignup(BaseModel):
     name: str
@@ -54,6 +68,24 @@ def read_root():
         with open("index.html", "r", encoding="utf-8") as f:
             return f.read()
     return "<h1>index.html not found on server</h1>"
+
+# Admin Login API
+@app.post("/api/admin/login")
+def admin_login(data: AdminLoginRequest):
+    if data.password == admin_credentials["password"]:
+        return {"status": "success", "message": "Admin logged in successfully"}
+    raise HTTPException(status_code=401, detail="Invalid admin password")
+
+# Admin Change Password API (Old, Create, Confirm format)
+@app.post("/api/admin/change-password")
+def change_admin_password(data: PasswordChangeRequest):
+    if data.old_password != admin_credentials["password"]:
+        raise HTTPException(status_code=400, detail="Incorrect old password")
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="New passwords do not match")
+    
+    admin_credentials["password"] = data.new_password
+    return {"status": "success", "message": "Password successfully updated"}
 
 # API Endpoints တွေ
 @app.post("/api/signup")
@@ -103,3 +135,6 @@ def get_user_profile(email: str):
         "status": "active",
         "days_remaining": 30
     }
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
